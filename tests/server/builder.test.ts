@@ -1,6 +1,6 @@
 import type { RouteNode } from 'vitarx-router/file-router'
 import { describe, expect, it } from 'vitest'
-import { buildSearchIndex } from '../../src/plugin/builder.js'
+import { buildSearchIndex } from '../../src/server/builder.js'
 import type { SearchSectionBuild } from '../../src/types.js'
 
 function createMockRoutes(

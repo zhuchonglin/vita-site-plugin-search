@@ -19,6 +19,7 @@ import type { SearchSectionBuild } from '../types.js'
 import { buildSearchIndex } from './builder.js'
 import { splitByHeadings } from './splitter.js'
 
+export { tokenize } from '../common/tokenizer.js'
 /**
  * 搜索插件配置选项
  *
@@ -42,7 +43,7 @@ const RESOLVED_SEARCH_INDEX_ID = '\0' + VIRTUAL_SEARCH_INDEX_ID
  * @param _options - 插件配置选项（预留扩展，当前未使用）
  * @returns VitaSite 插件实例
  */
-export function searchPlugin(_options: SearchPluginOptions = {}): VitaSitePlugin {
+export default function searchPlugin(_options: SearchPluginOptions = {}): VitaSitePlugin {
   /** 暂存所有文档的分段数据，key 为 meta.relativePath */
   const docs = new Map<string, { title: string; sections: SearchSectionBuild[] }>()
   /** app 实例引用，在 afterParse 中赋值，供 Vite 插件 load 钩子使用 */

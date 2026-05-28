@@ -1,6 +1,6 @@
 import type { TocTree } from 'vita-site/server'
 import { describe, expect, it } from 'vitest'
-import { splitByHeadings } from '../../src/plugin/splitter.js'
+import { splitByHeadings } from '../../src/server/splitter.js'
 
 function createTocList(
   items: Array<{ name: string; hash: string; children?: TocTree[] }>
