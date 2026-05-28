@@ -2,6 +2,10 @@
   "name": "@vita-site/plugin-search",
   "version": "0.0.0",
   "description": "search plugin for VitaSite",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zhuchonglin/vita-site-plugin-search"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
