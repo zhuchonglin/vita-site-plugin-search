@@ -75,7 +75,7 @@ function buildHashMap(tocList: TocTree[]): Map<string, string> {
   const map = new Map<string, string>()
   function walk(items: TocTree[]): void {
     for (const item of items) {
-      map.set(item.name, item.hash)
+      map.set(item.name, item.hash ?? item.name)
       if (item.children?.length) {
         walk(item.children)
       }
