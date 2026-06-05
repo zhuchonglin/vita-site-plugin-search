@@ -104,7 +104,7 @@ export function buildSearchIndex(
   }
 
   // 构建倒排索引：token → 出现位置列表
-  const index: Record<string, [number, number][]> = {}
+  const index: Record<string, [number, number][]> = Object.create(null)
   buildDocs.forEach((doc, di) => {
     // 标题 token 的 sectionIndex 记为 -1，搜索时可据此加权
     for (const token of doc.titleTokens) {
