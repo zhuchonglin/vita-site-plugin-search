@@ -32,7 +32,7 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "vita-site": "^1.0.0-0"
+    "vita-site": "^1.0.0"
   },
   "devDependencies": {
     "vita-site": "^1.0.2",
