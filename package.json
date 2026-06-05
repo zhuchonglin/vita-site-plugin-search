@@ -1,6 +1,6 @@
 {
   "name": "@vita-site/plugin-search",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "search plugin for VitaSite",
   "repository": {
     "type": "git",
