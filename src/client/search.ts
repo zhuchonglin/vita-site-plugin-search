@@ -39,7 +39,7 @@ export interface SearchOptions {
   /**
    * 最大内容长度
    *
-   * @default 200
+   * @default 100
    */
   maxContentLength?: number
 }
@@ -101,7 +101,7 @@ function isGenerationCurrent(generation: number): boolean {
  * @param options - 搜索选项
  * @param options.lang - 指定要搜索的语言
  * @param options.maxResults - 最大返回数量 @default 10
- * @param options.maxContentLength - 最大内容长度 @default 200
+ * @param options.maxContentLength - 最大内容长度 @default 100
  * @returns 搜索结果数组，按匹配得分降序排列
  */
 export function searchWithIndex(
@@ -109,7 +109,7 @@ export function searchWithIndex(
   searchIndex: SearchIndex,
   options?: SearchOptions
 ): SearchResult[] {
-  const { lang, maxResults = 10, maxContentLength = 200 } = options || {}
+  const { lang, maxResults = 10, maxContentLength = 100 } = options || {}
   const tokens = tokenize(query)
   if (tokens.length === 0) return []
 
@@ -141,15 +141,15 @@ export function searchWithIndex(
     .map(([key, { score, sectionIndex }]) => {
       const di = Number(key.split(':')[0])
       const doc = searchIndex.docs[di]!
-      const section = doc.sections[sectionIndex] ?? doc.sections[0]!
+      const [hash, heading, content] = doc.sections[sectionIndex] ?? doc.sections[0]!
       return {
         score,
         lang: doc.lang,
         path: doc.path,
-        hash: section.hash,
+        hash,
         title: doc.title,
-        heading: section.heading,
-        content: section.content.slice(0, maxContentLength),
+        heading,
+        content: content.slice(0, maxContentLength),
         matchType: doc.title.includes(query) ? ('page' as const) : ('content' as const)
       }
     })

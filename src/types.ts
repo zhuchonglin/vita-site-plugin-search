@@ -27,20 +27,13 @@ export interface SearchSectionBuild {
 }
 
 /**
- * 运行时：搜索索引中的文档段落
+ * 运行时：搜索索引中的文档段落（紧凑数组格式）
  *
- * 每个段落对应一个标题下的内容区域，
- * 通过 hash 可定位到页面内锚点。
- * 不含分词数据，减少索引体积。
+ * 使用数组格式 [hash, heading, content] 替代对象，
+ * 减少 JSON 体积（避免重复键名）。
+ * 内容已预先截断到搜索结果展示所需长度。
  */
-export interface SearchSection {
-  /** 最近上级标题的 hash（用于锚点跳转） */
-  hash: string
-  /** 最近上级标题文本 */
-  heading: string
-  /** 该段落的 Markdown 纯文本 */
-  content: string
-}
+export type SearchSection = [hash: string, heading: string, content: string]
 
 /**
  * 构建时：搜索索引中的文档条目（含分词数据）

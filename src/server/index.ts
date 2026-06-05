@@ -25,7 +25,15 @@ export { tokenize } from '../common/tokenizer.js'
  *
  * 在创建插件实例时传入，控制索引构建和搜索行为。
  */
-export interface SearchPluginOptions {}
+export interface SearchPluginOptions {
+  /**
+   * 索引中保留的内容最大长度
+   * 截断过长内容可以显著减少索引体积
+   *
+   * @default 100
+   */
+  contentLength?: number
+}
 
 const VIRTUAL_SEARCH_INDEX_ID = 'virtual:vita-site-search/index'
 const RESOLVED_SEARCH_INDEX_ID = '\0' + VIRTUAL_SEARCH_INDEX_ID
@@ -40,10 +48,10 @@ const RESOLVED_SEARCH_INDEX_ID = '\0' + VIRTUAL_SEARCH_INDEX_ID
  * 索引在 Vite 构建/开发时通过虚拟模块动态生成，
  * 客户端通过 `import('virtual:vita-site-search/index')` 按需加载。
  *
- * @param _options - 插件配置选项（预留扩展，当前未使用）
+ * @param options - 插件配置选项
  * @returns VitaSite 插件实例
  */
-export default function searchPlugin(_options: SearchPluginOptions = {}): VitaSitePlugin {
+export default function searchPlugin(options: SearchPluginOptions = {}): VitaSitePlugin {
   /** 暂存所有文档的分段数据，key 为 meta.relativePath */
   const docs = new Map<string, { title: string; sections: SearchSectionBuild[] }>()
   /** app 实例引用，在 afterParse 中赋值，供 Vite 插件 load 钩子使用 */
@@ -78,7 +86,7 @@ export default function searchPlugin(_options: SearchPluginOptions = {}): VitaSi
                     return 'export default { docs: [], index: {} }'
                   }
                   const { routes } = appRef.router.generate()
-                  const searchIndex = buildSearchIndex(docs, routes, appRef.lang)
+                  const searchIndex = buildSearchIndex(docs, routes, appRef.lang, options)
                   return `export default ${JSON.stringify(searchIndex)}`
                 }
                 return null

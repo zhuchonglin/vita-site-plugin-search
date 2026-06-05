@@ -18,7 +18,8 @@
 
 import type { RouteNode } from 'vitarx-router/file-router'
 import { tokenize } from '../common/tokenizer.js'
-import type { SearchDocBuild, SearchIndex, SearchSectionBuild } from '../types.js'
+import type { SearchDocBuild, SearchIndex, SearchSection, SearchSectionBuild } from '../types.js'
+import type { SearchPluginOptions } from './index.js'
 
 /** 路由映射条目，包含 fullPath 和路由级别的 lang */
 interface RouteMapping {
@@ -68,20 +69,22 @@ function buildPathMap(routes: RouteNode[]): Map<string, RouteMapping> {
  *
  * 将分段后的文档数据与路由信息合并，生成倒排索引。
  * 流程：
- * 1. 通过路由树建立 relativePath → fullPath 映射
+ * 1. 通过路由树建立 relativePath -> fullPath 映射
  * 2. 遍历文档数据，匹配 fullPath 并构建 SearchDocBuild 列表（含 token）
- * 3. 遍历所有 token，构建 token → [docIndex, sectionIndex][] 倒排索引
+ * 3. 遍历所有 token，构建 token -> [docIndex, sectionIndex][] 倒排索引
  * 4. 剥离 token 数据，输出精简的 SearchIndex
  *
- * @param docs - 文档数据 Map（relativePath → { title, sections }）
+ * @param docs - 文档数据 Map（relativePath -> { title, sections }）
  * @param routes - RouteNode 数组（来自 generate().routes）
  * @param fallbackLang - 回退语言，路由无 lang 时使用
+ * @param options - 搜索插件配置选项
  * @returns 搜索索引（docs 不含 token 数据 + 倒排 index）
  */
 export function buildSearchIndex(
   docs: Map<string, { title: string; sections: SearchSectionBuild[] }>,
   routes: RouteNode[],
-  fallbackLang: string
+  fallbackLang: string,
+  options: SearchPluginOptions = {}
 ): SearchIndex {
   const pathMap = buildPathMap(routes)
   const buildDocs: SearchDocBuild[] = []
@@ -117,15 +120,16 @@ export function buildSearchIndex(
     })
   })
 
-  // 剥离 token 数据，减少约 50% 索引体积
+  // 优化索引体积：
+  // 1. 提前截断 content 到搜索结果展示所需长度（搜索面板仅展示约 50 中文字符）
+  // 2. 文档 sections 使用紧凑数组格式 [hash, heading, content] 而非对象
+  const { contentLength = 100 } = options
   const runtimeDocs = buildDocs.map(doc => ({
     path: doc.path,
     title: doc.title,
-    sections: doc.sections.map(s => ({
-      hash: s.hash,
-      heading: s.heading,
-      content: s.content
-    })),
+    sections: doc.sections.map(
+      s => [s.hash, s.heading, s.content.slice(0, contentLength)] as SearchSection
+    ),
     lang: doc.lang
   }))
 

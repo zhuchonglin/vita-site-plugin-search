@@ -9,53 +9,27 @@ function createTestIndex(): SearchIndex {
         path: '/guide/intro',
         title: '快速开始',
         sections: [
-          {
-            hash: '#quick-start',
-            heading: '快速开始',
-            content: '这是一个快速开始的指南文档，帮助你了解基本用法。'
-          },
-          {
-            hash: '#install',
-            heading: '安装',
-            content: '使用 npm install 安装依赖。'
-          }
+          ['#quick-start', '快速开始', '这是一个快速开始的指南文档，帮助你了解基本用法。'],
+          ['#install', '安装', '使用 npm install 安装依赖。']
         ],
         lang: 'zh-CN'
       },
       {
         path: '/guide/search',
         title: '搜索功能',
-        sections: [
-          {
-            hash: '#search',
-            heading: '搜索功能',
-            content: '搜索插件支持中英文混合搜索。'
-          }
-        ],
+        sections: [['#search', '搜索功能', '搜索插件支持中英文混合搜索。']],
         lang: 'zh-CN'
       },
       {
         path: '/en/guide/intro',
         title: 'Getting Started',
-        sections: [
-          {
-            hash: '#quick-start',
-            heading: 'Quick Start',
-            content: 'This is a quick start guide to help you understand the basics.'
-          }
-        ],
+        sections: [['#quick-start', 'Quick Start', 'This is a quick start guide to help you understand the basics.']],
         lang: 'en-US'
       },
       {
         path: '/en/guide/search',
         title: 'Search',
-        sections: [
-          {
-            hash: '#search',
-            heading: 'Search',
-            content: 'Search plugin supports mixed Chinese and English search.'
-          }
-        ],
+        sections: [['#search', 'Search', 'Search plugin supports mixed Chinese and English search.']],
         lang: 'en-US'
       }
     ],
@@ -198,10 +172,10 @@ describe('searchWithIndex', () => {
   })
 
   describe('内容预览', () => {
-    it('应截取内容前 200 字符作为预览', () => {
+    it('应截取内容前 100 字符作为预览', () => {
       const results = searchWithIndex('指南', index)
       expect(results.length).toBeGreaterThan(0)
-      expect(results[0]!.content.length).toBeLessThanOrEqual(200)
+      expect(results[0]!.content.length).toBeLessThanOrEqual(100)
     })
   })
 

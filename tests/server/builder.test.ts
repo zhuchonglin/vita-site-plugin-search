@@ -249,4 +249,67 @@ describe('buildSearchIndex', () => {
       expect(result.docs.find(d => d.path === '/guide/intro-en')!.lang).toBe('en-US')
     })
   })
+
+  describe('contentLength 配置', () => {
+    it('默认应截取前 100 字符', () => {
+      const docs = createMockDocs([
+        {
+          relativePath: 'guide/intro.md',
+          title: '介绍',
+          sections: [
+            {
+              hash: '#intro',
+              heading: '介绍',
+              content: '这是一段很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的内容。'
+            }
+          ]
+        }
+      ])
+      const routes = createMockRoutes([{ relativePath: 'guide/intro.md', fullPath: '/guide/intro' }])
+
+      const result = buildSearchIndex(docs, routes, 'zh-CN')
+      const section = result.docs[0]!.sections[0]!
+      const [, , content] = section
+      expect(content.length).toBeLessThanOrEqual(100)
+    })
+
+    it('应使用配置的 contentLength 截取内容', () => {
+      const docs = createMockDocs([
+        {
+          relativePath: 'guide/intro.md',
+          title: '介绍',
+          sections: [
+            {
+              hash: '#intro',
+              heading: '介绍',
+              content: '这是一段测试内容，我们看看能截取多少。'
+            }
+          ]
+        }
+      ])
+      const routes = createMockRoutes([{ relativePath: 'guide/intro.md', fullPath: '/guide/intro' }])
+
+      const result = buildSearchIndex(docs, routes, 'zh-CN', { contentLength: 10 })
+      const section = result.docs[0]!.sections[0]!
+      const [, , content] = section
+      expect(content.length).toBeLessThanOrEqual(10)
+    })
+
+    it('短内容应完整保留', () => {
+      const shortContent = '短内容'
+      const docs = createMockDocs([
+        {
+          relativePath: 'guide/intro.md',
+          title: '介绍',
+          sections: [{ hash: '#intro', heading: '介绍', content: shortContent }]
+        }
+      ])
+      const routes = createMockRoutes([{ relativePath: 'guide/intro.md', fullPath: '/guide/intro' }])
+
+      const result = buildSearchIndex(docs, routes, 'zh-CN', { contentLength: 100 })
+      const section = result.docs[0]!.sections[0]!
+      const [, , content] = section
+      expect(content).toBe(shortContent)
+    })
+  })
 })
