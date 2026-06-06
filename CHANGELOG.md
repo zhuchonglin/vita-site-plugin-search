@@ -1,4 +1,6 @@
-# [1.0.0-alpha.3](https://github.com/zhuchonglin/vita-site-plugin-search/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2026-06-05)
+# [1.0.0](https://github.com/zhuchonglin/vita-site-plugin-search/compare/v1.0.0-alpha.3...v1.0.0) (2026-06-06)
+
+# [1.0.0-alpha.2](https://github.com/zhuchonglin/vita-site-plugin-search/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2026-06-02)
 
 
 ### Bug Fixes
