@@ -32,10 +32,10 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "vita-site": "^1.0.0"
+    "vita-site": "^1.0.4"
   },
   "devDependencies": {
-    "vita-site": "^1.0.2",
+    "vita-site": "^1.0.4",
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "@commitlint/types": "^20.5.0",
